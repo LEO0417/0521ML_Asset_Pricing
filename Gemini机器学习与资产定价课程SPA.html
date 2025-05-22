@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>机器学习与资产定价短期课程</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Visualization & Content Choices:
+        - 课程总览：Text display for name, target. Bar chart (Chart.js) for '课程结构' (课程次数：3, 作业次数：3) to visually represent the course load. Goal: Inform. Interaction: None. Justification: Clear, concise visual summary.
+        - 核心目标与特色：Icon-based list for key objectives and features. Goal: Inform, Highlight. Interaction: None. Justification: Easily scannable, visually appealing.
+        - 研究对象：Interactive cards (HTML/CSS/JS). Clicking a card reveals a short description of ML applications for that asset. Goal: Explore, Inform. Interaction: Click to reveal details. Justification: Allows users to explore topics of interest without overwhelming them.
+        - 数据类型：Text explanation. Goal: Inform.
+        - 教学方法：Icon-based list. Goal: Inform.
+        - 学习要求与成果：Text lists. Goal: Inform.
+        - Library/Method: Chart.js for the bar chart. Vanilla JS for card interactions and navigation. Tailwind CSS for all styling.
+        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif; /* Using Inter as a default Tailwind font */
+        }
+        .smooth-scroll {
+            scroll-behavior: smooth;
+        }
+        .nav-link {
+            @apply px-3 py-2 rounded-md text-sm font-medium text-stone-700 hover:bg-sky-100 hover:text-sky-700 transition-colors;
+        }
+        .nav-link.active {
+            @apply bg-sky-600 text-white;
+        }
+        .section-title {
+            @apply text-3xl font-bold text-stone-800 mb-8 text-center;
+        }
+        .card {
+            @apply bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow cursor-pointer border border-stone-200;
+        }
+        .card.active {
+            @apply ring-2 ring-sky-500 shadow-xl;
+        }
+        .icon-placeholder { /* Simple unicode icons */
+            @apply mr-2 text-sky-600;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px; /* Adjusted for a potentially smaller chart */
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px; 
+            max-height: 350px;
+        }
+         @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800 smooth-scroll">
+
+    <nav id="navbar" class="bg-white/80 backdrop-blur-md shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <span class="font-bold text-xl text-sky-700">机器学习与资产定价</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#overview" class="nav-link">课程总览</a>
+                        <a href="#objectives" class="nav-link">核心目标</a>
+                        <a href="#features" class="nav-link">课程特色</a>
+                        <a href="#content" class="nav-link">内容探索</a>
+                        <a href="#methods" class="nav-link">教学实践</a>
+                        <a href="#requirements" class="nav-link">要求与成果</a>
+                    </div>
+                </div>
+                <div class="-mr-2 flex md:hidden">
+                    <button type="button" id="mobile-menu-button" class="bg-white inline-flex items-center justify-center p-2 rounded-md text-stone-400 hover:text-stone-500 hover:bg-stone-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-sky-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">打开主菜单</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="md:hidden hidden" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#overview" class="nav-link block">课程总览</a>
+                <a href="#objectives" class="nav-link block">核心目标</a>
+                <a href="#features" class="nav-link block">课程特色</a>
+                <a href="#content" class="nav-link block">内容探索</a>
+                <a href="#methods" class="nav-link block">教学实践</a>
+                <a href="#requirements" class="nav-link block">要求与成果</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-sky-600 text-white pt-10 pb-10 md:pt-16 md:pb-16">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">机器学习与资产定价短期课程</h1>
+            <p class="text-lg md:text-xl text-sky-100">掌握前沿工具，探索金融未来。本课程将带您从机器学习的视角参与资产定价实践。</p>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <section id="overview" class="py-12 md:py-16">
+            <h2 class="section-title"><span class="icon-placeholder">🗓️</span>课程总览</h2>
+            <div class="bg-white p-8 rounded-xl shadow-lg grid md:grid-cols-2 gap-8 items-center">
+                <div>
+                    <p class="text-lg mb-4">本部分概述了课程的基本信息，包括课程名称、目标学员、课程安排和作业情况，帮助您快速了解课程的整体框架。</p>
+                    <ul class="space-y-3 text-stone-700">
+                        <li><strong>课程名称：</strong>机器学习与资产定价</li>
+                        <li><strong>目标学员：</strong>金融专业高年级本科生</li>
+                        <li><strong>课程安排：</strong>三次课程，每周一次，每次 2.5 小时</li>
+                        <li><strong>作业安排：</strong>三次课后作业</li>
+                    </ul>
+                </div>
+                <div class="chart-container">
+                    <canvas id="courseStructureChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="objectives" class="py-12 md:py-16 bg-stone-100 rounded-xl">
+            <h2 class="section-title"><span class="icon-placeholder">🎯</span>核心目标</h2>
+            <div class="max-w-3xl mx-auto text-center mb-8">
+                 <p class="text-lg text-stone-700">本课程旨在帮助学生从机器学习的视角参与资产定价的实践，掌握核心工具与算法，并培养应用知识解决实际问题的能力。我们侧重实践案例，减少纯理论讲解，力求提供直观的学习体验。</p>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <h3 class="text-xl font-semibold text-sky-700 mb-2">实践视角</h3>
+                    <p class="text-sm text-stone-600">从机器学习视角参与资产定价实践。</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <h3 class="text-xl font-semibold text-sky-700 mb-2">掌握工具</h3>
+                    <p class="text-sm text-stone-600">使学生掌握基本机器学习工具和算法。</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <h3 class="text-xl font-semibold text-sky-700 mb-2">解决问题</h3>
+                    <p class="text-sm text-stone-600">培养学生应用所学知识解决实际资产定价问题的能力。</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <h3 class="text-xl font-semibold text-sky-700 mb-2">直观体验</h3>
+                    <p class="text-sm text-stone-600">侧重实践案例，减少理论讲解，提供直观体验。</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="py-12 md:py-16">
+            <h2 class="section-title"><span class="icon-placeholder">✨</span>课程特色</h2>
+             <div class="max-w-3xl mx-auto text-center mb-8">
+                 <p class="text-lg text-stone-700">本课程具有鲜明的实践特色，以 Python 代码实现为核心，结合权威论文复现和课堂实时操作，聚焦于标普 500 指数和汇率等重点资产的研究。</p>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <h3 class="text-xl font-semibold text-sky-700 mb-2">实践导向</h3>
+                    <p class="text-sm text-stone-600">以 Python 代码实现为核心。</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <h3 class="text-xl font-semibold text-sky-700 mb-2">论文复现</h3>
+                    <p class="text-sm text-stone-600">每节课基于一篇权威机器学习资产定价论文。</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <h3 class="text-xl font-semibold text-sky-700 mb-2">实时操作</h3>
+                    <p class="text-sm text-stone-600">课堂上展示完整技术流程。</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <h3 class="text-xl font-semibold text-sky-700 mb-2">重点资产</h3>
+                    <p class="text-sm text-stone-600">标普 500 指数和汇率。</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="content" class="py-12 md:py-16 bg-stone-100 rounded-xl">
+            <h2 class="section-title"><span class="icon-placeholder">🔬</span>内容探索</h2>
+            <div class="max-w-4xl mx-auto text-center mb-8">
+                <p class="text-lg text-stone-700">本课程将涵盖多种研究对象和数据类型。通过下方的卡片，您可以点击了解不同研究对象在机器学习资产定价中的应用简介。</p>
+            </div>
+            <div class="mb-10">
+                <h3 class="text-2xl font-semibold text-stone-800 mb-4 text-center">研究对象</h3>
+                <div class="grid md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
+                    <div class="card research-object-card" data-id="a-shares">A 股股票</div>
+                    <div class="card research-object-card" data-id="stock-indexes">股指</div>
+                    <div class="card research-object-card" data-id="commodities">大宗商品</div>
+                    <div class="card research-object-card" data-id="forex">外汇</div>
+                    <div class="card research-object-card" data-id="carbon-price">碳价格</div>
+                </div>
+                <div id="research-object-details" class="bg-white p-6 rounded-lg shadow-md min-h-[100px] text-stone-700">
+                    <p>请点击上方的研究对象查看简介。</p>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-2xl font-semibold text-stone-800 mb-4 text-center">数据类型</h3>
+                <div class="grid md:grid-cols-2 gap-6 text-center">
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h4 class="text-xl font-semibold text-sky-700 mb-2">横截面数据</h4>
+                        <p class="text-sm text-stone-600">分析特定时间点上多个观测对象的数据，例如同一天不同股票的财务指标。</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h4 class="text-xl font-semibold text-sky-700 mb-2">时间序列数据</h4>
+                        <p class="text-sm text-stone-600">分析同一观测对象在不同时间点上的数据，例如某支股票每日的收盘价。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="methods" class="py-12 md:py-16">
+            <h2 class="section-title"><span class="icon-placeholder">👨‍🏫</span>教学与实践</h2>
+             <div class="max-w-3xl mx-auto text-center mb-8">
+                 <p class="text-lg text-stone-700">我们采用多样化的教学方法，结合精简的理论讲解、深入的案例分析、直观的代码演示和实时操作，并通过课后作业巩固学习成果。</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-2xl font-semibold text-stone-800 mb-4">教学方法</h3>
+                    <ul class="space-y-2 text-stone-700">
+                        <li><span class="icon-placeholder">📖</span>理论讲解（精简）</li>
+                        <li><span class="icon-placeholder">📊</span>案例分析</li>
+                        <li><span class="icon-placeholder">💻</span>代码演示</li>
+                        <li><span class="icon-placeholder">🖱️</span>实时操作</li>
+                        <li><span class="icon-placeholder">✍️</span>课后实践作业</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-semibold text-stone-800 mb-4">作业安排</h3>
+                    <p class="text-stone-700">课程共安排三次课后作业，旨在帮助学生巩固所学知识，并将理论应用于实践中。每次作业都与当周课程内容紧密相关。</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="requirements" class="py-12 md:py-16 bg-stone-100 rounded-xl">
+            <h2 class="section-title"><span class="icon-placeholder">🎓</span>要求与成果</h2>
+             <div class="max-w-3xl mx-auto text-center mb-8">
+                 <p class="text-lg text-stone-700">了解参与本课程所需的基础知识，以及通过学习本课程您将获得的宝贵技能和实际操作经验。</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-2xl font-semibold text-stone-800 mb-4">课程要求</h3>
+                    <ul class="space-y-2 text-stone-700">
+                        <li><span class="icon-placeholder">🐍</span>Python 基础（不具备的学生需要课前自学）</li>
+                        <li><span class="icon-placeholder">🧠</span>机器学习基础知识（课程中会简要介绍）</li>
+                        <li><span class="icon-placeholder">📈</span>基本资产定价理论</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-semibold text-stone-800 mb-4">预期成果</h3>
+                    <p class="text-stone-700">学生通过本课程将能够利用机器学习方法分析和预测金融资产价格，并获得实际操作经验。这将为他们在金融行业的职业发展或进一步的学术研究打下坚实基础。</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-stone-800 text-stone-300 py-8 text-center">
+        <p>&copy; 2025 机器学习与资产定价课程。保留所有权利。</p>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuButton.addEventListener('click', () => {
+            const expanded = mobileMenuButton.getAttribute('aria-expanded') === 'true' || false;
+            mobileMenuButton.setAttribute('aria-expanded', !expanded);
+            mobileMenu.classList.toggle('hidden');
+            mobileMenuButton.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+
+        // Smooth scroll for nav links and active state
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('section[id]');
+        const navbar = document.getElementById('navbar');
+        const navbarHeight = navbar.offsetHeight;
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                // For mobile menu, close it after click
+                if (mobileMenu.classList.contains('block') && !mobileMenu.classList.contains('hidden')) {
+                     mobileMenuButton.click();
+                }
+            });
+        });
+        
+        function updateActiveNavLink() {
+            let index = sections.length;
+            while(--index && window.scrollY + navbarHeight < sections[index].offsetTop) {}
+            
+            navLinks.forEach((link) => link.classList.remove('active'));
+            // Check if a section is found, and if the corresponding link exists
+            if (index >= 0 && sections[index].id) {
+                const activeLink = document.querySelector(`.nav-link[href="#${sections[index].id}"]`);
+                if (activeLink) {
+                    activeLink.classList.add('active');
+                }
+            } else { // If no section is active (e.g., at the very top or bottom out of range)
+                 const firstLink = document.querySelector('.nav-link'); // Default to first or clear all
+                 if (firstLink && window.scrollY < sections[0].offsetTop - navbarHeight) {
+                    // Optionally activate the first link if scrolled to top, or clear all
+                    // firstLink.classList.add('active'); 
+                 }
+            }
+        }
+
+        window.addEventListener('scroll', updateActiveNavLink);
+        updateActiveNavLink(); // Initial call
+
+
+        // Chart.js: Course Structure Chart
+        const ctx = document.getElementById('courseStructureChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['课程次数', '作业次数'],
+                datasets: [{
+                    label: '数量',
+                    data: [3, 3],
+                    backgroundColor: [
+                        'rgba(59, 130, 246, 0.6)', // sky-500
+                        'rgba(16, 185, 129, 0.6)'  // emerald-500
+                    ],
+                    borderColor: [
+                        'rgb(59, 130, 246)',
+                        'rgb(16, 185, 129)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1,
+                            color: '#4b5563' // text-stone-600
+                        },
+                        grid: {
+                            color: '#e5e7eb' // stone-200
+                        }
+                    },
+                    x: {
+                         ticks: {
+                            color: '#4b5563' 
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false // Hiding legend as it's simple enough
+                    },
+                    title: {
+                        display: true,
+                        text: '课程结构概览',
+                        padding: {
+                            top: 10,
+                            bottom: 20
+                        },
+                        font: {
+                            size: 16,
+                            weight: 'bold'
+                        },
+                        color: '#1f2937' // text-stone-800
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.dataset.label}: ${context.raw}`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Interactive Research Objects
+        const researchObjectCards = document.querySelectorAll('.research-object-card');
+        const researchObjectDetailsDiv = document.getElementById('research-object-details');
+        
+        const researchObjectsData = {
+            'a-shares': {
+                title: 'A股股票',
+                description: '运用机器学习模型分析A股市场的特有因子、预测股票收益率、识别市场异象，并结合中国市场特点进行策略开发。例如，利用文本挖掘分析研报情绪，或使用集成学习方法构建选股模型。'
+            },
+            'stock-indexes': {
+                title: '股指',
+                description: '通过机器学习预测主要股票指数（如标普500、沪深300）的涨跌趋势、波动率。常用模型包括LSTM、GRU等深度学习网络处理时间序列特征，以及随机森林、梯度提升树等捕捉非线性关系。'
+            },
+            'commodities': {
+                title: '大宗商品',
+                description: '利用机器学习预测石油、黄金、农产品等大宗商品价格。模型常结合基本面数据（供需、库存）、宏观经济指标、卫星图像、天气数据等另类数据，以提高预测准确性。'
+            },
+            'forex': {
+                title: '外汇',
+                description: '应用机器学习技术分析和预测货币对汇率波动。模型可以基于历史价格、交易量、宏观经济新闻、市场情绪指标等构建，用于辅助交易决策或风险管理。'
+            },
+            'carbon-price': {
+                title: '碳价格',
+                description: '随着碳交易市场的发展，机器学习被用于预测碳排放配额的价格。模型需考虑政策因素、能源价格、经济活动水平以及天气等多种影响因素的复杂非线性作用。'
+            }
+        };
+
+        researchObjectCards.forEach(card => {
+            card.addEventListener('click', () => {
+                researchObjectCards.forEach(c => c.classList.remove('active'));
+                card.classList.add('active');
+                const objectId = card.dataset.id;
+                const details = researchObjectsData[objectId];
+                if (details) {
+                    researchObjectDetailsDiv.innerHTML = `
+                        <h4 class="text-xl font-semibold text-sky-700 mb-2">${details.title}</h4>
+                        <p class="text-stone-600">${details.description}</p>
+                    `;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
