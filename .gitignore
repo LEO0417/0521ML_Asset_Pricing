@@ -1,0 +1,4 @@
+# 保留虚拟环境，但忽略缓存文件
+sp500_env/__pycache__/
+sp500_env/**/__pycache__/
+sp500_env/*.py[cod]
