@@ -47,4 +47,44 @@ python sp500_volatility_prediction.py
 ## 参考文献
 
 - Heaton, J. B., Polson, N. G., & Witte, J. H. (2017). Deep learning for finance: deep portfolios. Applied Stochastic Models in Business and Industry, 33(1), 3-12.
-- Gu, S., Kelly, B., & Xiu, D. (2020). Empirical asset pricing via machine learning. The Review of Financial Studies, 33(5), 2223-2273. 
+- Gu, S., Kelly, B., & Xiu, D. (2020). Empirical asset pricing via machine learning. The Review of Financial Studies, 33(5), 2223-2273.
+
+# 机器学习与资产定价短期课程教案
+
+本存储库包含 **机器学习与资产定价** 短期课程的全部教学资源。为了便于按节次使用，本仓库将所有内容按照课程进度拆分到 `lessons/` 目录下的子文件夹中，每一个子文件夹代表一节课。
+
+## 目录结构
+
+```
+lessons/
+├── lesson01_overview                  # 课程介绍与学习目标
+├── lesson02_environment               # 开发环境配置与 Python 基础
+├── lesson03_data_acquisition          # 数据获取与初步分析
+├── lesson04_feature_engineering       # 特征工程与数据预处理
+├── lesson05_model_building            # LSTM 模型构建与训练
+├── lesson06_evaluation_and_visualization # 模型评估与可视化
+├── lesson07_deployment                # 模型保存、加载与部署
+└── lesson08_report                    # 项目报告与课程总结
+```
+
+## 快速开始
+
+1. 克隆仓库并进入
+   ```bash
+   git clone <repo_url>
+   cd <repo_name>
+   ```
+2. 创建并激活虚拟环境（可选）
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # Windows 请使用 venv\Scripts\activate
+   ```
+3. 安装依赖
+   ```bash
+   pip install -r requirements.txt
+   ```
+4. 进入对应节次文件夹，根据 `README.md` 步骤运行示例代码。
+
+---
+
+> 如对课程资料有任何疑问，欢迎在 Issues 中反馈。 

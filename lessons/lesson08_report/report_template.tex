@@ -1,0 +1,53 @@
+% report_template.tex
+\documentclass[11pt]{article}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath, amssymb}
+\usepackage{hyperref}
+\geometry{margin=1in}
+
+\title{机器学习与资产定价课程\newline 期末报告标题}
+\author{姓名 学号 邮箱}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+在此处简要描述研究目的、方法与主要结论，控制在 150--200 字。
+\end{abstract}
+
+\section{引言}
+简要介绍研究背景与动机。
+
+\section{数据与方法}
+\subsection{数据说明}
+数据来源、时间跨度、样本概况。
+
+\subsection{特征工程}
+描述所使用的金融指标与变量。
+
+\subsection{模型方法}
+介绍 LSTM 及其它对比模型的参数与设置。
+
+\section{实验结果}
+插入图表，引用 Figure~\ref{fig:loss}。
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/loss_curve.pdf}
+    \caption{训练与验证损失}
+    \label{fig:loss}
+\end{figure}
+
+\section{讨论}
+对结果进行解释、与文献对比、提出局限与改进。
+
+\section{结论}
+总结全文，给出未来工作展望。
+
+\bibliographystyle{apalike}
+\bibliography{references}
+
+\end{document} 

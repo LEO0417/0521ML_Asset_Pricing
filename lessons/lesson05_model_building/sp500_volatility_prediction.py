@@ -26,6 +26,10 @@ plt.style.use('seaborn-v0_8')
 plt.rcParams['font.sans-serif'] = ['SimHei']  # 使用黑体
 plt.rcParams['axes.unicode_minus'] = False    # 正常显示负号
 
+# 全局输出目录（保存模型与图像）
+OUTPUT_DIR = os.path.join(os.path.dirname(__file__), '..', 'lesson06_evaluation_and_visualization')
+os.makedirs(os.path.join(OUTPUT_DIR, 'assets'), exist_ok=True)
+
 # 1. 数据获取
 def get_sp500_data(start_date='2010-01-01', end_date='2023-12-31', use_cache=True):
     """
@@ -264,7 +268,7 @@ def visualize_results(df, history, y_test_actual, y_pred_actual):
     ax4.legend()
     
     plt.tight_layout()
-    plt.savefig('sp500_volatility_prediction_results.png', dpi=300)
+    plt.savefig(os.path.join(OUTPUT_DIR, 'assets', 'sp500_volatility_prediction_results.png'), dpi=300)
     plt.show()
     
     # 散点图对比实际值与预测值
@@ -277,7 +281,7 @@ def visualize_results(df, history, y_test_actual, y_pred_actual):
     plt.xlabel('实际波动率', fontsize=12)
     plt.ylabel('预测波动率', fontsize=12)
     plt.grid(True)
-    plt.savefig('sp500_volatility_prediction_scatter.png', dpi=300)
+    plt.savefig(os.path.join(OUTPUT_DIR, 'assets', 'sp500_volatility_prediction_scatter.png'), dpi=300)
     plt.show()
 
 # 7. 主函数
@@ -312,7 +316,7 @@ def main():
     visualize_results(df, history, y_test_actual, y_pred_actual)
     
     # 6. 保存模型
-    model.save('sp500_volatility_lstm_model.h5')
+    model.save(os.path.join(OUTPUT_DIR, 'sp500_volatility_lstm_model.h5'))
     print("\n模型已保存为 'sp500_volatility_lstm_model.h5'")
     
     # 7. 未来预测示例
